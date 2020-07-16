@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import sh.okx.roller.command.CommandListener;
+import sh.okx.roller.command.StopCommand;
 import sh.okx.roller.commands.EvalCommand;
 import sh.okx.roller.commands.HelpCommand;
 import sh.okx.roller.commands.RollCommand;
@@ -41,6 +42,7 @@ public class Roller {
         commands.addCommand(new HelpCommand(this));
         commands.addCommand(new RollCommand(this));
         commands.addCommand(new EvalCommand(this));
+        commands.addCommand(new StopCommand(this));
     }
 
     public static void main(String[] args) throws Exception {
