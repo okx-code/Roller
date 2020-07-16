@@ -41,7 +41,7 @@ public class RollCommand extends Command {
                 int i = Integer.parseInt(part);
                 total += i;
                 rollsString.append("+ ").append(i).append(" ");
-                if (k == add.length - 1) {
+                if (k != add.length - 1) {
                     rollsString.append("+ ");
                 }
                 continue;
