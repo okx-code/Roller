@@ -56,7 +56,7 @@ public class RollCommand extends Command {
 
                 int high = Math.max(a, b);
                 rollsString.append("adv {").append(a).append(", ").append(b).append("}=")
-                    .append(high);
+                    .append(high).append(" ");
                 if (high < min) {
                     min = high;
                 }
@@ -73,7 +73,7 @@ public class RollCommand extends Command {
 
                 int low = Math.min(a, b);
                 rollsString.append("dis {").append(a).append(", ").append(b).append("}=")
-                    .append(low);
+                    .append(low).append(" ");
                 if (low < min) {
                     min = low;
                 }
