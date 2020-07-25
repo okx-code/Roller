@@ -1,7 +1,9 @@
 package sh.okx.roller.commands;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import sh.okx.roller.Roller;
 import sh.okx.roller.command.Command;
 import sh.okx.roller.command.CommandEvent;
@@ -34,16 +36,13 @@ public class RollCommand extends Command {
         int max = 1;
         int min = 1000;
         int total = 0;
-        StringBuilder rollsString = new StringBuilder();
+        List<String> sp = new ArrayList<>(add.length);
         for (int k = 0; k < add.length; k++) {
             String part = add[k].trim();
             try {
                 int i = Integer.parseInt(part);
                 total += i;
-                rollsString.append("+ ").append(i).append(" ");
-                if (k != add.length - 1) {
-                    rollsString.append("+ ");
-                }
+                sp.add(Integer.toString(i));
                 continue;
             } catch (NumberFormatException ignored) {
             }
@@ -55,8 +54,7 @@ public class RollCommand extends Command {
                 int b = random.nextInt(sides) + 1;
 
                 int high = Math.max(a, b);
-                rollsString.append("adv {").append(a).append(", ").append(b).append("}=")
-                    .append(high).append(" ");
+                sp.add("adv {" + a + ", " + b + "}=" + high);
                 if (high < min) {
                     min = high;
                 }
@@ -72,8 +70,7 @@ public class RollCommand extends Command {
                 int b = random.nextInt(sides) + 1;
 
                 int low = Math.min(a, b);
-                rollsString.append("dis {").append(a).append(", ").append(b).append("}=")
-                    .append(low).append(" ");
+                sp.add("dis {" + a + ", " + b + "}=" + low);
                 if (low < min) {
                     min = low;
                 }
@@ -115,7 +112,7 @@ public class RollCommand extends Command {
                 .mapToInt(Integer::intValue)
                 .toArray();
 
-            rollsString.append("[");
+            StringBuilder sa = new StringBuilder("[");
             for (int i = 0; i < top; i++) {
                 total += rolls[i];
                 if (rolls[i] < min) {
@@ -125,26 +122,27 @@ public class RollCommand extends Command {
                     max = rolls[i];
                 }
                 if (i > 0) {
-                    rollsString.append(", ");
+                    sa.append(", ");
                 }
-                rollsString.append(rolls[i]);
+                sa.append(rolls[i]);
             }
 
             if (top < times) {
-                rollsString.append(" / ");
+                sa.append(" / ");
                 for (int i = top; i < rolls.length; i++) {
                     if (i > top) {
-                        rollsString.append(", ");
+                        sa.append(", ");
                     }
-                    rollsString.append(rolls[i]);
+                    sa.append(rolls[i]);
                 }
             }
 
-            rollsString.append("] ");
+            sa.append("]");
+            sp.add(sa.toString());
         }
 
         event.reply(event.getUser().getName() + ", "
-            + "Roll: `" + rollsString.toString().trim() + "`, "
+            + "Roll: `" + String.join(" + ", sp) + "`, "
 //            + "Max: `" + max + "`\n"
 //            + "Min: `" + min + "`\n"
             + "Result: `" + total + "`");
