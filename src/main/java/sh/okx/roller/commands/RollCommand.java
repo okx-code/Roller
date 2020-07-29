@@ -4,10 +4,13 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import lombok.extern.java.Log;
+import net.dv8tion.jda.api.entities.User;
 import sh.okx.roller.Roller;
 import sh.okx.roller.command.Command;
 import sh.okx.roller.command.CommandEvent;
 
+@Log
 public class RollCommand extends Command {
 
     private final SecureRandom random = new SecureRandom();
@@ -141,7 +144,10 @@ public class RollCommand extends Command {
             sp.add(sa.toString());
         }
 
-        event.reply(event.getUser().getName() + ", "
+        User user = event.getUser();
+        String name = user.getName();
+        log.info(name + ": " + event.getMessage().getContentDisplay());
+        event.reply(name + ", "
             + "Roll: `" + String.join(" + ", sp) + "`, "
 //            + "Max: `" + max + "`\n"
 //            + "Min: `" + min + "`\n"
