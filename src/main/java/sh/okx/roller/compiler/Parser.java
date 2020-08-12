@@ -57,7 +57,13 @@ public class Parser {
                 }
             } else if (type == Type.DICE) {
                 index++;
-                nodes.push(new DiceNode(nodes.pop(), nodes.pop()));
+                AstNode count = nodes.pop();
+                AstNode sides = nodes.peek();
+                if (sides instanceof NumberLiteral) {
+                    nodes.push(new DiceNode(count, nodes.pop()));
+                } else {
+                    nodes.push(new DiceNode(count, new NumberLiteral(1)));
+                }
             } else if (type == Type.OPERATOR) {
                 index++;
                 nodes.push(new AddNode(nodes.pop(), nodes.pop()));
