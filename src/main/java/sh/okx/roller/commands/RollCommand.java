@@ -1,19 +1,18 @@
 package sh.okx.roller.commands;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import lombok.extern.java.Log;
 import net.dv8tion.jda.api.entities.User;
 import sh.okx.roller.Roller;
 import sh.okx.roller.command.Command;
 import sh.okx.roller.command.CommandEvent;
+import sh.okx.roller.compiler.Compiler;
+import sh.okx.roller.compiler.Util;
+import sh.okx.roller.compiler.ast.AstNode;
+import sh.okx.roller.compiler.result.NodeResult;
 
 @Log
 public class RollCommand extends Command {
-
-    private final SecureRandom random = new SecureRandom();
+    private static final Compiler compiler = new Compiler();
 
     public RollCommand(Roller bot) {
         super(bot, "roll");
@@ -31,6 +30,21 @@ public class RollCommand extends Command {
      * <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
      */
     @Override
+    public void onSend(CommandEvent event) {
+        String dice = event.getArguments();
+
+        AstNode compile = compiler.compile(dice);
+        NodeResult result = compile.evaluate();
+
+        User user = event.getUser();
+        String name = user.getName();
+        log.info(name + ": " + event.getMessage().getContentDisplay());
+        event.reply(name + ", "
+                + "Roll: `" + result.toHumanReadable() + "`, "
+                + "Result: `" + Util.sum(result.array()) + "`");
+    }
+
+    /*@Override
     public void onSend(CommandEvent event) {
         String dice = event.getArguments();
 
@@ -152,5 +166,5 @@ public class RollCommand extends Command {
 //            + "Max: `" + max + "`\n"
 //            + "Min: `" + min + "`\n"
             + "Result: `" + total + "`");
-    }
+    }*/
 }
