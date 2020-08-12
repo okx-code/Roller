@@ -3,9 +3,9 @@ package sh.okx.roller.compiler;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import sh.okx.roller.character.Ability;
 import sh.okx.roller.compiler.Token.Type;
 import sh.okx.roller.compiler.ast.AbilityScore;
-import sh.okx.roller.compiler.ast.AbilityScore.Ability;
 import sh.okx.roller.compiler.ast.AddNode;
 import sh.okx.roller.compiler.ast.AdvantageNode;
 import sh.okx.roller.compiler.ast.AstNode;
@@ -13,15 +13,23 @@ import sh.okx.roller.compiler.ast.DiceNode;
 import sh.okx.roller.compiler.ast.DisadvantageNode;
 import sh.okx.roller.compiler.ast.NumberLiteral;
 import sh.okx.roller.compiler.ast.TakeNode;
+import sh.okx.roller.compiler.context.Context;
 
 public class Parser {
+    private final Context context;
+
     private int index;
+
+    public Parser(Context context) {
+        this.context = context;
+    }
 
     public AstNode parse(List<Token> tokens) {
         index = 0;
 
         Deque<AstNode> nodes = new ArrayDeque<>();
 
+        LOOP:
         while (index < tokens.size()) {
 
             Token token = tokens.get(index);
@@ -42,7 +50,8 @@ public class Parser {
 
                 for (Ability ability : Ability.values()) {
                     if (ability.name().toUpperCase().startsWith(val.toUpperCase())) {
-                        nodes.push(new AbilityScore(ability));
+                        nodes.push(new AbilityScore(context, ability));
+                        continue LOOP;
                     }
                 }
 

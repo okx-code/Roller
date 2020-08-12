@@ -5,16 +5,17 @@ import java.util.List;
 import java.util.function.Predicate;
 import sh.okx.roller.compiler.Token.Type;
 import sh.okx.roller.compiler.ast.AstNode;
+import sh.okx.roller.compiler.context.Context;
 
 public class Compiler {
     private static final Predicate<Character> IS_NUMBER = c -> c >= '0' && c <= '9';
     private static final Predicate<Character> IS_LETTER = c -> (c >= 'a' && c <= 'z') || (c >= 'A'
             && c <= 'Z');
 
-    public AstNode compile(String input) {
+    public AstNode compile(Context context, String input) {
         List<Token> tokens = tokenize(input);
         tokens = new Shunter().shunt(tokens);
-        return new Parser().parse(tokens);
+        return new Parser(context).parse(tokens);
     }
 
     public List<Token> tokenize(String input) {

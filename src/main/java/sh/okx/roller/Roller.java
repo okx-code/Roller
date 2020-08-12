@@ -1,5 +1,6 @@
 package sh.okx.roller;
 
+import com.zaxxer.hikari.HikariDataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,11 +13,17 @@ import lombok.extern.java.Log;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import sh.okx.roller.character.Ability;
+import sh.okx.roller.character.CharacterDao;
 import sh.okx.roller.command.CommandListener;
 import sh.okx.roller.command.StopCommand;
+import sh.okx.roller.commands.CharacterCommand;
 import sh.okx.roller.commands.EvalCommand;
 import sh.okx.roller.commands.HelpCommand;
+import sh.okx.roller.commands.InitiativeCommand;
 import sh.okx.roller.commands.RollCommand;
+import sh.okx.roller.commands.ability.ScoreCommand;
+import sh.okx.roller.database.SqlCharacterDao;
 
 @Log
 public class Roller {
@@ -25,9 +32,17 @@ public class Roller {
     private final Properties config;
     @Getter
     private CommandListener commands;
+    @Getter
+    private final CharacterDao characterDao;
 
     public Roller(Properties config) throws LoginException {
         this.config = config;
+
+        HikariDataSource ds = new HikariDataSource();
+        ds.setJdbcUrl("jdbc:mysql://localhost:3306/" + config.getProperty("sql.database"));
+        ds.setUsername(config.getProperty("sql.username"));
+        ds.setPassword(config.getProperty("sql.password"));
+        this.characterDao = new SqlCharacterDao(ds);
 
         registerCommands();
 
@@ -43,6 +58,18 @@ public class Roller {
         commands.addCommand(new RollCommand(this));
         commands.addCommand(new EvalCommand(this));
         commands.addCommand(new StopCommand(this));
+
+        commands.addCommand(new CharacterCommand(this));
+
+        commands.addCommand(new InitiativeCommand(this));
+
+        commands.addCommand(new ScoreCommand(this, Ability.DEXTERITY, "dex"));
+        commands.addCommand(new ScoreCommand(this, Ability.STRENGTH, "str"));
+        commands.addCommand(new ScoreCommand(this, Ability.CHARISMA, "cha"));
+        commands.addCommand(new ScoreCommand(this, Ability.CONSTITUTION, "con"));
+        commands.addCommand(new ScoreCommand(this, Ability.INTELLIGENCE, "int"));
+        commands.addCommand(new ScoreCommand(this, Ability.WISDOM, "wis"));
+
     }
 
     public static void main(String[] args) throws Exception {

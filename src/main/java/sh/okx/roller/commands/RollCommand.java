@@ -3,6 +3,7 @@ package sh.okx.roller.commands;
 import lombok.extern.java.Log;
 import net.dv8tion.jda.api.entities.User;
 import sh.okx.roller.Roller;
+import sh.okx.roller.character.CharacterContext;
 import sh.okx.roller.command.Command;
 import sh.okx.roller.command.CommandEvent;
 import sh.okx.roller.compiler.Compiler;
@@ -33,10 +34,18 @@ public class RollCommand extends Command {
     public void onSend(CommandEvent event) {
         String dice = event.getArguments();
 
-        AstNode compile = compiler.compile(dice);
-        NodeResult result = compile.evaluate();
-
         User user = event.getUser();
+        NodeResult result;
+        try {
+            AstNode compile = compiler.compile(
+                    new CharacterContext(bot.getCharacterDao(), user.getIdLong()),
+                    dice);
+            result = compile.evaluate();
+        } catch (IllegalArgumentException ex){
+            event.reply("Error: " + ex.getMessage());
+            return;
+        }
+
         String name = user.getName();
         log.info(name + ": " + event.getMessage().getContentDisplay());
         event.reply(name + ", "
