@@ -26,6 +26,11 @@ public class Array2dResult implements NodeResult {
     }
 
     @Override
+    public int[][] array2d() {
+        return array;
+    }
+
+    @Override
     public String result() {
         return Util.toString(array());
     }

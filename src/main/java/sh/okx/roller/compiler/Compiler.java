@@ -27,6 +27,12 @@ public class Compiler {
 
             // "+" operator
             if (c == '+') {
+                if (index + 1 < input.length() && input.charAt(index + 1) == '+') {
+                    // "++" operator (array concat)
+                    tokens.add(new Token(Type.ARRAY_CONCAT, "++"));
+                    index += 2;
+                    continue;
+                }
                 tokens.add(new Token(Type.ADD, "+"));
                 index++;
                 continue;

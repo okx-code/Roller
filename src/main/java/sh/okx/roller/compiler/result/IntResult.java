@@ -20,6 +20,11 @@ public class IntResult implements NodeResult {
     }
 
     @Override
+    public int[][] array2d() {
+        return new int[][] {{value}};
+    }
+
+    @Override
     public String result() {
         return String.valueOf(value);
     }

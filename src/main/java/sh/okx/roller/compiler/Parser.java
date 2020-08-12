@@ -8,6 +8,7 @@ import sh.okx.roller.compiler.Token.Type;
 import sh.okx.roller.compiler.ast.AbilityScore;
 import sh.okx.roller.compiler.ast.AddNode;
 import sh.okx.roller.compiler.ast.AdvantageNode;
+import sh.okx.roller.compiler.ast.ArrayConcatNode;
 import sh.okx.roller.compiler.ast.AstNode;
 import sh.okx.roller.compiler.ast.DiceNode;
 import sh.okx.roller.compiler.ast.DisadvantageNode;
@@ -83,6 +84,9 @@ public class Parser {
             } else if (type == Type.TAKE) {
                 index++;
                 nodes.push(new TakeNode(nodes.pop(), nodes.pop()));
+            } else if (type == Type.ARRAY_CONCAT) {
+                index++;
+                nodes.push(new ArrayConcatNode(nodes.pop(), nodes.pop()));
             }
         }
 

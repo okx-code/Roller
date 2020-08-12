@@ -16,12 +16,10 @@ public class MultiplyNode extends AstNode {
     public NodeResult evaluate() {
         int times = right.evaluate().number();
 
-        int len = 0;
         StringBuilder human = new StringBuilder();
         NodeResult[] results = new NodeResult[times];
         for (int i = 0; i < times; i++) {
             results[i] = left.evaluate();
-            len += results[i].array().length;
             if (i > 0) {
                 human.append(" ");
             }
