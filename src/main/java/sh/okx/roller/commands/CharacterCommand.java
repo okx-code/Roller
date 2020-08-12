@@ -1,5 +1,6 @@
 package sh.okx.roller.commands;
 
+import java.util.List;
 import sh.okx.roller.Roller;
 import sh.okx.roller.character.Ability;
 import sh.okx.roller.character.Character;
@@ -10,14 +11,74 @@ public class CharacterCommand extends Command {
     public CharacterCommand(Roller bot) {
         super(bot, "character");
         this.aliases = new String[] {"char", "c", "ch"};
-        this.description = "Show your character's statistics";
+        this.usage = "list / create <name> / select <name> / delete";
+        this.description = "Show your character's statistics or modify your character";
     }
 
     @Override
     public void onSend(CommandEvent event) {
-        Character character = bot.getCharacterDao().getCharacter(event.getUserId());
+        event.subCommand("list", subevent -> {
+            List<Character> characters = bot.getCharacterDao().getShallowCharacters(event.getUserId());
+            Character selected = bot.getCharacterDao().getShallowCharacter(event.getUserId());
+            StringBuilder reply = new StringBuilder("*Your characters:*");
 
-        StringBuilder msg = new StringBuilder("Character for: " + event.getUser().getName());
+            for (Character ch : characters) {
+                if (selected != null && ch.getId() == selected.getId()) {
+                    reply.append("\n**").append(ch.getName()).append("** ");
+                } else {
+                    reply.append("\n").append(ch.getName()).append(" ");
+                }
+            }
+
+            subevent.reply(reply);
+        });
+        event.subCommand("create", subevent -> {
+            List<Character> characters = bot.getCharacterDao().getShallowCharacters(event.getUserId());
+            String name = subevent.getArguments().trim();
+            for (Character ch : characters) {
+                if (ch.getName().equalsIgnoreCase(name)) {
+                    subevent.error("You have already created a character with that name!");
+                }
+            }
+
+            bot.getCharacterDao().createCharacter(event.getUserId(), name);
+            subevent.reply("Created character: " + name + "\n"
+                    + "Use `,character select " + name + "` to select it.");
+        });
+        event.subCommand("select", subevent -> {
+            List<Character> characters = bot.getCharacterDao().getShallowCharacters(event.getUserId());
+            String name = subevent.getArguments().trim();
+            for (Character ch : characters) {
+                if (ch.getName().equalsIgnoreCase(name)) {
+                    bot.getCharacterDao().selectCharacter(subevent.getUserId(), ch.getId());
+                    event.reply("Selected character: " + name);
+                    return;
+                }
+            }
+
+            event.reply("Could not find a character with that name.");
+        });
+        event.subCommand("delete", subevent -> {
+            List<Character> characters = bot.getCharacterDao().getShallowCharacters(event.getUserId());
+            String name = subevent.getArguments().trim();
+            for (Character ch : characters) {
+                if (ch.getName().equalsIgnoreCase(name)) {
+                    bot.getCharacterDao().deleteCharacter(ch.getId());
+                    event.reply("Deleted character: " + name);
+                    return;
+                }
+            }
+
+            event.reply("Could not find a character with that name.");
+        });
+
+        Character character = bot.getCharacterDao().getCharacter(event.getUserId());
+        if (character == null) {
+            event.reply("You must create and select a character to use this command.\n"
+                    + "See `,help character` for usage.");
+        }
+
+        StringBuilder msg = new StringBuilder("Character: **" + character.getName() + "**");
 
         msg.append("\nInitiative roll: " + "`").append(character.getInitiative()).append("`\n");
 
