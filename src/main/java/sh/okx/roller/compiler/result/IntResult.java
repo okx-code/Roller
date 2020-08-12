@@ -20,6 +20,11 @@ public class IntResult implements NodeResult {
     }
 
     @Override
+    public String result() {
+        return String.valueOf(value);
+    }
+
+    @Override
     public String toHumanReadable() {
         return human;
     }

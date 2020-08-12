@@ -6,7 +6,6 @@ import sh.okx.roller.character.CharacterContext;
 import sh.okx.roller.command.Command;
 import sh.okx.roller.command.CommandEvent;
 import sh.okx.roller.compiler.Compiler;
-import sh.okx.roller.compiler.Util;
 import sh.okx.roller.compiler.ast.AstNode;
 import sh.okx.roller.compiler.result.NodeResult;
 
@@ -47,7 +46,7 @@ public class RollCommand extends Command {
         String name = user.getName();
         event.reply(name + ", "
                 + "Roll: `" + result.toHumanReadable() + "`, "
-                + "Result: `" + Util.sum(result.array()) + "`");
+                + "Result: `" + result.result() + "`");
     }
 
     /*@Override

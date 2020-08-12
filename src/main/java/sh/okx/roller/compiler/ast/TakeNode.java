@@ -1,7 +1,5 @@
 package sh.okx.roller.compiler.ast;
 
-import java.util.Arrays;
-import java.util.List;
 import sh.okx.roller.compiler.Util;
 import sh.okx.roller.compiler.result.ArrayResult;
 import sh.okx.roller.compiler.result.NodeResult;
@@ -16,11 +14,6 @@ public class TakeNode extends AstNode {
     }
 
     @Override
-    public List<AstNode> children() {
-        return Arrays.asList(left, right);
-    }
-
-    @Override
     public NodeResult evaluate() {
         int top = right.evaluate().number();
         int[] array = left.evaluate().array();
@@ -32,8 +25,8 @@ public class TakeNode extends AstNode {
         }
 
         int[] result = new int[top];
-        for (int i = 0; i < top; i++) {
-            result[i] = array[i];
+        if (top >= 0) {
+            System.arraycopy(array, 0, result, 0, top);
         }
 
         StringBuilder str = new StringBuilder("[");

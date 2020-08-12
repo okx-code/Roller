@@ -27,7 +27,14 @@ public class Compiler {
 
             // "+" operator
             if (c == '+') {
-                tokens.add(new Token(Type.OPERATOR, "+"));
+                tokens.add(new Token(Type.ADD, "+"));
+                index++;
+                continue;
+            }
+
+            // multiply
+            if (c == '*') {
+                tokens.add(new Token(Type.MULTIPLY, "*"));
                 index++;
                 continue;
             }

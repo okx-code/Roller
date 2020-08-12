@@ -11,6 +11,7 @@ import sh.okx.roller.compiler.ast.AdvantageNode;
 import sh.okx.roller.compiler.ast.AstNode;
 import sh.okx.roller.compiler.ast.DiceNode;
 import sh.okx.roller.compiler.ast.DisadvantageNode;
+import sh.okx.roller.compiler.ast.MultiplyNode;
 import sh.okx.roller.compiler.ast.NumberLiteral;
 import sh.okx.roller.compiler.ast.TakeNode;
 import sh.okx.roller.compiler.context.Context;
@@ -73,9 +74,12 @@ public class Parser {
                 } else {
                     nodes.push(new DiceNode(count, new NumberLiteral(1)));
                 }
-            } else if (type == Type.OPERATOR) {
+            } else if (type == Type.ADD) {
                 index++;
                 nodes.push(new AddNode(nodes.pop(), nodes.pop()));
+            } else if (type == Type.MULTIPLY) {
+                index++;
+                nodes.push(new MultiplyNode(nodes.pop(), nodes.pop()));
             } else if (type == Type.TAKE) {
                 index++;
                 nodes.push(new TakeNode(nodes.pop(), nodes.pop()));

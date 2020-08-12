@@ -12,10 +12,16 @@ import sh.okx.roller.character.Character;
 import sh.okx.roller.character.CharacterDao;
 
 public class SqlCharacterDao implements CharacterDao {
+    private static final String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS users ("
+            + "user_id BIGINT NOT NULL, "
+            + "curent_character_id INT NOT NULL, "
+            + "PRIMARY KEY (user_id))";
+
     private static final String CREATE_CHARACTER_TABLE = "CREATE TABLE IF NOT EXISTS characters ("
-            + "id BIGINT, "
+            + "character_id INT NOT NULL AUTO_INCREMENT, "
+            + "user_id BIGINT, "
             + "initiative VARCHAR(255), "
-            + "PRIMARY KEY (id))";
+            + "PRIMARY KEY (character_id))";
     private static final String CREATE_ABILITY_TABLE = "CREATE TABLE IF NOT EXISTS abilities ("
             + "character_id BIGINT, "
             + "ability VARCHAR(255), "
@@ -39,6 +45,7 @@ public class SqlCharacterDao implements CharacterDao {
         try(Connection connection = source.getConnection()) {
             connection.createStatement().executeUpdate(CREATE_CHARACTER_TABLE);
             connection.createStatement().executeUpdate(CREATE_ABILITY_TABLE);
+            connection.createStatement().executeUpdate(CREATE_USER_TABLE);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }

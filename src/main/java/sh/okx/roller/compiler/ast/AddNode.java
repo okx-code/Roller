@@ -1,7 +1,5 @@
 package sh.okx.roller.compiler.ast;
 
-import java.util.Arrays;
-import java.util.List;
 import sh.okx.roller.compiler.result.ArrayResult;
 import sh.okx.roller.compiler.result.NodeResult;
 
@@ -12,11 +10,6 @@ public class AddNode extends AstNode {
     public AddNode(AstNode left, AstNode right) {
         this.left = left;
         this.right = right;
-    }
-
-    @Override
-    public List<AstNode> children() {
-        return Arrays.asList(left, right);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package sh.okx.roller.compiler.ast;
 
-import java.util.Arrays;
-import java.util.List;
 import sh.okx.roller.compiler.RandomSource;
 import sh.okx.roller.compiler.Util;
 import sh.okx.roller.compiler.result.ArrayResult;
@@ -14,11 +12,6 @@ public class DiceNode extends AstNode {
     public DiceNode(AstNode left, AstNode right) {
         this.left = left;
         this.right = right;
-    }
-
-    @Override
-    public List<AstNode> children() {
-        return Arrays.asList(left, right);
     }
 
     @Override
