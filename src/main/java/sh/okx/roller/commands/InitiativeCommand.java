@@ -23,14 +23,18 @@ public class InitiativeCommand extends Command {
     @Override
     public void onSend(CommandEvent event) {
         String[] opt = event.optionalArguments(1);
+        Character character = bot.getCharacterDao().getCharacter(event.getUserId());
         if (opt.length > 0) {
             String dice = opt[0];
-            bot.getCharacterDao().setInitiative(event.getUserId(), dice);
-            event.reply("Set initiative roll to: `" + dice + "`");
+            if (character == null) {
+                event.reply("You must select a character to set its initiative.");
+            } else {
+                bot.getCharacterDao().setInitiative(character.getId(), dice);
+                event.reply("Set initiative roll to: `" + dice + "`");
+            }
             return;
         }
 
-        Character character = bot.getCharacterDao().getCharacter(event.getUserId());
         String initiative = character.getInitiative();
         boolean changed = false;
 
