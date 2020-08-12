@@ -22,6 +22,7 @@ import sh.okx.roller.commands.EvalCommand;
 import sh.okx.roller.commands.HelpCommand;
 import sh.okx.roller.commands.InitiativeCommand;
 import sh.okx.roller.commands.RollCommand;
+import sh.okx.roller.commands.SourceCommand;
 import sh.okx.roller.commands.ability.ScoreCommand;
 import sh.okx.roller.database.SqlCharacterDao;
 
@@ -57,6 +58,7 @@ public class Roller {
         commands.addCommand(new HelpCommand(this));
         commands.addCommand(new RollCommand(this));
         commands.addCommand(new EvalCommand(this));
+        commands.addCommand(new SourceCommand(this));
         commands.addCommand(new StopCommand(this));
 
         commands.addCommand(new CharacterCommand(this));
@@ -69,6 +71,7 @@ public class Roller {
         commands.addCommand(new ScoreCommand(this, Ability.CONSTITUTION, "con"));
         commands.addCommand(new ScoreCommand(this, Ability.INTELLIGENCE, "int"));
         commands.addCommand(new ScoreCommand(this, Ability.WISDOM, "wis"));
+
 
     }
 
