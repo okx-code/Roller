@@ -97,7 +97,7 @@ public class CommandListener extends ListenerAdapter {
           try {
 
             String in = event.isFromGuild() ? event.getGuild().getName() + " #" + channel.getName() : "DM";
-            log.fine("[" + in + "] " + user.getName() + ": <"
+            log.info("[" + in + "] " + user.getName() + ": <"
                 + commandName + "> " + arguments);
 
             try {

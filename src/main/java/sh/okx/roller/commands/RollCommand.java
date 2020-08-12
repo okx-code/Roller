@@ -1,6 +1,5 @@
 package sh.okx.roller.commands;
 
-import lombok.extern.java.Log;
 import net.dv8tion.jda.api.entities.User;
 import sh.okx.roller.Roller;
 import sh.okx.roller.character.CharacterContext;
@@ -11,7 +10,6 @@ import sh.okx.roller.compiler.Util;
 import sh.okx.roller.compiler.ast.AstNode;
 import sh.okx.roller.compiler.result.NodeResult;
 
-@Log
 public class RollCommand extends Command {
     private static final Compiler compiler = new Compiler();
 
@@ -47,7 +45,6 @@ public class RollCommand extends Command {
         }
 
         String name = user.getName();
-        log.info(name + ": " + event.getMessage().getContentDisplay());
         event.reply(name + ", "
                 + "Roll: `" + result.toHumanReadable() + "`, "
                 + "Result: `" + Util.sum(result.array()) + "`");

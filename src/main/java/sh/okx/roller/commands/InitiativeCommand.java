@@ -1,6 +1,5 @@
 package sh.okx.roller.commands;
 
-import lombok.extern.java.Log;
 import sh.okx.roller.Roller;
 import sh.okx.roller.character.Character;
 import sh.okx.roller.character.CharacterContext;
@@ -11,13 +10,13 @@ import sh.okx.roller.compiler.Util;
 import sh.okx.roller.compiler.ast.AstNode;
 import sh.okx.roller.compiler.result.NodeResult;
 
-@Log
 public class InitiativeCommand extends Command {
     private static final Compiler compiler = new Compiler();
 
     public InitiativeCommand(Roller bot) {
         super(bot, "initiative");
         this.description = "Roll for initiative";
+        this.usage = "[new initiative roll]";
         this.aliases = new String[] {"init", "i"};
     }
 
@@ -52,7 +51,6 @@ public class InitiativeCommand extends Command {
         }
 
         String name = event.getUser().getName();
-        log.info(name + ": " + event.getMessage().getContentDisplay());
         event.reply(name + " "
                 + (changed ? "(using default initiative of d20 + DEX)" : "")
                 + ", Roll: `" + result.toHumanReadable() + "`, "
