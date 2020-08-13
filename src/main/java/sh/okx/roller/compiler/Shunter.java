@@ -16,11 +16,18 @@ public class Shunter {
             Type type = token.getType();
             if (type.arity() == 0) {
                 outputQueue.add(token);
+            } else if (type == Type.RIGHT_PARENTHESIS) {
+                while (!operatorStack.isEmpty() && operatorStack.peek().getType() != Type.LEFT_PARENTHESIS) {
+                    outputQueue.add(operatorStack.pop());
+                }
+                if (!operatorStack.isEmpty() && operatorStack.peek().getType() == Type.LEFT_PARENTHESIS) {
+                    operatorStack.pop();
+                }
             } else if (type.notation() == Notation.PREFIX) {
                 operatorStack.push(token);
             } else {
                 if (!operatorStack.isEmpty()) {
-                    while (!operatorStack.isEmpty() && operatorStack.peek().getType().precedence() > type.precedence()) {
+                    while (!operatorStack.isEmpty() && operatorStack.peek().getType().precedence() > type.precedence() && operatorStack.peek().getType() != Type.LEFT_PARENTHESIS) {
                         outputQueue.add(operatorStack.pop());
                     }
                 }

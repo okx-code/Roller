@@ -14,6 +14,7 @@ import sh.okx.roller.compiler.ast.DiceNode;
 import sh.okx.roller.compiler.ast.DisadvantageNode;
 import sh.okx.roller.compiler.ast.MultiplyNode;
 import sh.okx.roller.compiler.ast.NumberLiteral;
+import sh.okx.roller.compiler.ast.RepeatNode;
 import sh.okx.roller.compiler.ast.TakeNode;
 import sh.okx.roller.compiler.context.Context;
 
@@ -78,15 +79,18 @@ public class Parser {
             } else if (type == Type.ADD) {
                 index++;
                 nodes.push(new AddNode(nodes.pop(), nodes.pop()));
-            } else if (type == Type.MULTIPLY) {
+            } else if (type == Type.REPEAT) {
                 index++;
-                nodes.push(new MultiplyNode(nodes.pop(), nodes.pop()));
+                nodes.push(new RepeatNode(nodes.pop(), nodes.pop()));
             } else if (type == Type.TAKE) {
                 index++;
                 nodes.push(new TakeNode(nodes.pop(), nodes.pop()));
             } else if (type == Type.ARRAY_CONCAT) {
                 index++;
                 nodes.push(new ArrayConcatNode(nodes.pop(), nodes.pop()));
+            } else if (type == Type.MULTIPLY) {
+                index++;
+                nodes.push(new MultiplyNode(nodes.pop(), nodes.pop()));
             }
         }
 

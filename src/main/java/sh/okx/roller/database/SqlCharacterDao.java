@@ -23,7 +23,7 @@ public class SqlCharacterDao implements CharacterDao {
             + "character_id INT NOT NULL AUTO_INCREMENT, "
             + "name VARCHAR(255), "
             + "user_id BIGINT, "
-            + "initiative VARCHAR(255), "
+            + "initiative VARCHAR(255) DEFAULT 'd20 + dex', "
             + "PRIMARY KEY (character_id))";
     private static final String CREATE_ABILITY_TABLE = "CREATE TABLE IF NOT EXISTS abilities ("
             + "character_id BIGINT, "

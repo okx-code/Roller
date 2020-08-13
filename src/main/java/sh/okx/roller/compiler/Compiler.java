@@ -38,9 +38,27 @@ public class Compiler {
                 continue;
             }
 
-            // multiply
+            // repeat
+            if (c == '^') {
+                tokens.add(new Token(Type.REPEAT, "^"));
+                index++;
+                continue;
+            }
+
+            // int multiply
             if (c == '*') {
                 tokens.add(new Token(Type.MULTIPLY, "*"));
+                index++;
+                continue;
+            }
+
+            if (c == '(') {
+                tokens.add(new Token(Type.LEFT_PARENTHESIS, "("));
+                index++;
+                continue;
+            }
+            if (c == ')') {
+                tokens.add(new Token(Type.RIGHT_PARENTHESIS, ")"));
                 index++;
                 continue;
             }

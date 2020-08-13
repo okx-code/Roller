@@ -23,9 +23,12 @@ public class Token {
         LITERAL(), // "20" in d20
         ADD(Notation.INFIX, 2, 10), // "+" in d20 + 5
         ARRAY_CONCAT(Notation.INFIX, 2, 5), // "++" in 3/4d20 ++ 3/4d20
-        MULTIPLY(Notation.INFIX, 2, 20),
+        REPEAT(Notation.INFIX, 2, 20),
         TAKE(Notation.INFIX, 2, 80), // "/" in 3/4d20
-        MODIFIER(Notation.PREFIX, 1, 95);
+        MODIFIER(Notation.PREFIX, 1, 95),
+        MULTIPLY(Notation.INFIX, 2, 25),
+        LEFT_PARENTHESIS(Notation.PREFIX, 1, 100),
+        RIGHT_PARENTHESIS(Notation.PREFIX, 1, 100);
 
         private final Notation notation;
         private final int arity;
