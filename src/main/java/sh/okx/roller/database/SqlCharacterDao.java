@@ -111,7 +111,7 @@ public class SqlCharacterDao implements CharacterDao {
             }
 
             PreparedStatement abilities = connection.prepareStatement(GET_ABILITIES);
-            abilities.setLong(1, id);
+            abilities.setLong(1, character.getId());
 
             Map<Ability, Integer> scores = new EnumMap<>(Ability.class);
 
