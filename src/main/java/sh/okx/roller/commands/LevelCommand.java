@@ -9,14 +9,14 @@ import sh.okx.roller.compiler.Util;
 public class LevelCommand extends Command {
     public LevelCommand(Roller bot) {
         super(bot, "level");
-        this.aliases = new String[] {"lvl"};
+        this.aliases = new String[] {"lvl", "l"};
         this.usage = "<level>";
         this.description = "Set your character's level";
     }
 
     @Override
     public void onSend(CommandEvent event) {
-        int level = event.requirePositiveInt(event.getArguments());
+        int level = event.requirePositiveInt(event.requireArguments(1)[0]);
 
         Character character = bot.getCharacterDao().getShallowCharacter(event.getUserId());
         if (character == null) {
@@ -24,7 +24,7 @@ public class LevelCommand extends Command {
             return;
         }
 
-        bot.getCharacterDao().setLevel(character.getLevel(), level);
+        bot.getCharacterDao().setLevel(character.getId(), level);
         event.reply("Set your level to: **" + level + "** with proficiency bonus **"
                 + Util.plusNumber(Character.getProficiencyBonus(level)) + "**");
     }
