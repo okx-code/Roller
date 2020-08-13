@@ -5,15 +5,9 @@ import sh.okx.roller.compiler.result.IntResult;
 import sh.okx.roller.compiler.result.NodeResult;
 
 public class DisadvantageNode extends AstNode {
-    private final AstNode child;
-
-    public DisadvantageNode(AstNode child) {
-        this.child = child;
-    }
-
     @Override
     public NodeResult evaluate() {
-        int sides = child.evaluate().number();
+        int sides = 20;
 
         int r0 = RandomSource.random(1, sides);
         int r1 = RandomSource.random(1, sides);

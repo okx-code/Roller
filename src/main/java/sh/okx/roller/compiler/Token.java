@@ -25,7 +25,7 @@ public class Token {
         ARRAY_CONCAT(Notation.INFIX, 2, 5), // "++" in 3/4d20 ++ 3/4d20
         REPEAT(Notation.INFIX, 2, 20),
         TAKE(Notation.INFIX, 2, 80), // "/" in 3/4d20
-        MODIFIER(Notation.PREFIX, 1, 95),
+        MODIFIER(Notation.PREFIX, 0, 95),
         MULTIPLY(Notation.INFIX, 2, 25),
         LEFT_PARENTHESIS(Notation.PREFIX, 1, 100),
         RIGHT_PARENTHESIS(Notation.PREFIX, 1, 100);
@@ -60,7 +60,7 @@ public class Token {
     public enum Notation {
         INFIX,
         POSTFIX,
-        PREFIX;
+        PREFIX
     }
 
     @Override

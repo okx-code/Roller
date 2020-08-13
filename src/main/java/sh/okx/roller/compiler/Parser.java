@@ -63,9 +63,9 @@ public class Parser {
                 index++;
 
                 if (val.equalsIgnoreCase("adv")) {
-                    nodes.push(new AdvantageNode(nodes.pop()));
+                    nodes.push(new AdvantageNode());
                 } else if (val.equalsIgnoreCase("dis")) {
-                    nodes.push(new DisadvantageNode(nodes.pop()));
+                    nodes.push(new DisadvantageNode());
                 }
             } else if (type == Type.DICE) {
                 index++;
