@@ -21,6 +21,7 @@ import sh.okx.roller.commands.CharacterCommand;
 import sh.okx.roller.commands.EvalCommand;
 import sh.okx.roller.commands.HelpCommand;
 import sh.okx.roller.commands.InitiativeCommand;
+import sh.okx.roller.commands.LevelCommand;
 import sh.okx.roller.commands.RollCommand;
 import sh.okx.roller.commands.SourceCommand;
 import sh.okx.roller.commands.ability.ScoreCommand;
@@ -64,6 +65,7 @@ public class Roller {
         commands.addCommand(new CharacterCommand(this));
 
         commands.addCommand(new InitiativeCommand(this));
+        commands.addCommand(new LevelCommand(this));
 
         commands.addCommand(new ScoreCommand(this, Ability.DEXTERITY, "dex"));
         commands.addCommand(new ScoreCommand(this, Ability.STRENGTH, "str"));

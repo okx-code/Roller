@@ -18,7 +18,7 @@ public class Token {
     }
 
     public enum Type {
-        ABILITIY(), // "dex" in d20 + dex
+        ABILITY(), // "dex" in d20 + dex
         DICE(Notation.INFIX, 2, 90), // "d" in 1d20
         LITERAL(), // "20" in d20
         ADD(Notation.INFIX, 2, 10), // "+" in d20 + 5

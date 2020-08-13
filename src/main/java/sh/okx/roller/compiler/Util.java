@@ -1,8 +1,11 @@
 package sh.okx.roller.compiler;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class Util {
+    private static final DecimalFormat PLUS_NUMBER_FORMAT = new DecimalFormat("+#;-#");
+
     public static String toString(int[] array) {
         StringBuilder builder = new StringBuilder("[");
         for (int i = 0; i < array.length; i++) {
@@ -34,5 +37,9 @@ public class Util {
             sum += i;
         }
         return sum;
+    }
+
+    public static String plusNumber(int num) {
+        return PLUS_NUMBER_FORMAT.format(num);
     }
 }

@@ -35,6 +35,10 @@ public class CharacterCommand extends Command {
         event.subCommand("create", subevent -> {
             List<Character> characters = bot.getCharacterDao().getShallowCharacters(event.getUserId());
             String name = subevent.getArguments().trim();
+            if (name.isEmpty()) {
+                event.usage();
+                return;
+            }
             for (Character ch : characters) {
                 if (ch.getName().equalsIgnoreCase(name)) {
                     subevent.error("You have already created a character with that name!");
@@ -48,6 +52,10 @@ public class CharacterCommand extends Command {
         event.subCommand("select", subevent -> {
             List<Character> characters = bot.getCharacterDao().getShallowCharacters(event.getUserId());
             String name = subevent.getArguments().trim();
+            if (name.isEmpty()) {
+                event.usage();
+                return;
+            }
             for (Character ch : characters) {
                 if (ch.getName().equalsIgnoreCase(name)) {
                     bot.getCharacterDao().selectCharacter(subevent.getUserId(), ch.getId());
@@ -61,6 +69,10 @@ public class CharacterCommand extends Command {
         event.subCommand("delete", subevent -> {
             List<Character> characters = bot.getCharacterDao().getShallowCharacters(event.getUserId());
             String name = subevent.getArguments().trim();
+            if (name.isEmpty()) {
+                event.usage();
+                return;
+            }
             for (Character ch : characters) {
                 if (ch.getName().equalsIgnoreCase(name)) {
                     bot.getCharacterDao().deleteCharacter(ch.getId());
@@ -76,11 +88,13 @@ public class CharacterCommand extends Command {
         if (character == null) {
             event.reply("You must create and select a character to use this command.\n"
                     + "See `,help character` for usage.");
+            return;
         }
 
         StringBuilder msg = new StringBuilder("Character: **" + character.getName() + "**");
 
-        msg.append("\nInitiative roll: " + "`").append(character.getInitiative()).append("`\n");
+        msg.append("\nLevel: **").append(character.getLevel()).append("**")
+                .append("\nInitiative roll: " + "`").append(character.getInitiative()).append("`");
 
         for (Ability ability : Ability.values()) {
             String score;

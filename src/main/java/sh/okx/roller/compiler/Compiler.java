@@ -140,7 +140,7 @@ public class Compiler {
                 || string.equalsIgnoreCase("int") || string.equalsIgnoreCase("intelligence")
                 || string.equalsIgnoreCase("wis") || string.equalsIgnoreCase("wisdom")
                 || string.equalsIgnoreCase("cha") || string.equalsIgnoreCase("charisma")) {
-            return new Token(Type.ABILITIY, string);
+            return new Token(Type.ABILITY, string);
         }
         return null;
     }

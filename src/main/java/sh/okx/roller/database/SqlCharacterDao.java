@@ -23,6 +23,7 @@ public class SqlCharacterDao implements CharacterDao {
             + "character_id INT NOT NULL AUTO_INCREMENT, "
             + "name VARCHAR(255), "
             + "user_id BIGINT, "
+            + "level INT DEFAULT 1, "
             + "initiative VARCHAR(255) DEFAULT 'd20 + dex', "
             + "PRIMARY KEY (character_id))";
     private static final String CREATE_ABILITY_TABLE = "CREATE TABLE IF NOT EXISTS abilities ("
@@ -35,6 +36,7 @@ public class SqlCharacterDao implements CharacterDao {
     private static final String GET_ABILITIES = "SELECT * FROM abilities WHERE character_id = ?";
     private static final String SET_SCORE = "REPLACE INTO abilities (character_id, ability, score) VALUES (?, ?, ?)";
     private static final String SET_INITIATIVE = "UPDATE characters SET initiative = ? WHERE character_id = ?";
+    private static final String SET_LEVEL = "UPDATE characters SET level = ? WHERE character_id = ?";
     private static final String GET_SHALLOW_CHARACTERS = "SELECT * FROM characters WHERE user_id = ?";
     private static final String CREATE_CHARACTER = "INSERT INTO characters (name, user_id) VALUES (?, ?)";
     private static final String DELETE_ABILITIES = "DELETE FROM abilities WHERE character_id = ?";
@@ -70,7 +72,7 @@ public class SqlCharacterDao implements CharacterDao {
             while (characterResult.next()) {
                 String initiative = characterResult.getString("initiative");
                 String name = characterResult.getString("name");
-                characters.add(new Character(characterResult.getInt("character_id"), name, initiative, null));
+                characters.add(new Character(characterResult.getInt("character_id"), characterResult.getInt("level"), name, initiative, null));
             }
 
             return characters;
@@ -91,6 +93,7 @@ public class SqlCharacterDao implements CharacterDao {
             }
 
             return new Character(characterResult.getInt("character_id"),
+                    characterResult.getInt("level"),
                     characterResult.getString("name"),
                     characterResult.getString("initiative"),
                     null);
@@ -120,7 +123,7 @@ public class SqlCharacterDao implements CharacterDao {
                 scores.put(ability, score);
             }
 
-            return new Character(character.getId(), character.getName(), character.getInitiative(), scores);
+            return new Character(character.getId(), character.getLevel(), character.getName(), character.getInitiative(), scores);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -131,6 +134,19 @@ public class SqlCharacterDao implements CharacterDao {
         try(Connection connection = source.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SET_INITIATIVE);
             statement.setString(1, initiative);
+            statement.setLong(2, id);
+
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void setLevel(long id, int level) {
+        try(Connection connection = source.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(SET_LEVEL);
+            statement.setInt(1, level);
             statement.setLong(2, id);
 
             statement.executeUpdate();

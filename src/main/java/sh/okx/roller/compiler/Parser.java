@@ -48,7 +48,7 @@ public class Parser {
                     throw new IllegalArgumentException("Cannot parse number (too big?): " + val);
                 }
                 nodes.push(new NumberLiteral(value));
-            } else if (type == Type.ABILITIY) {
+            } else if (type == Type.ABILITY) {
                 index++;
 
                 for (Ability ability : Ability.values()) {
