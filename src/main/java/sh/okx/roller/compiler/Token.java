@@ -27,6 +27,7 @@ public class Token {
         TAKE(Notation.INFIX, 2, 80), // "/" in 3/4d20
         MODIFIER(Notation.PREFIX, 0, 95),
         MULTIPLY(Notation.INFIX, 2, 25),
+        SORT(Notation.PREFIX, 1, 70),
         LEFT_PARENTHESIS(Notation.PREFIX, 1, 100),
         RIGHT_PARENTHESIS(Notation.PREFIX, 1, 100);
 

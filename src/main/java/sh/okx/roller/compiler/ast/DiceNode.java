@@ -23,7 +23,6 @@ public class DiceNode extends AstNode {
         for (int i = 0; i < result.length; i++) {
             result[i] = RandomSource.random(1, sides);
         }
-        Util.sortDescending(result);
         return new ArrayResult(Util.toString(result), result);
     }
 }

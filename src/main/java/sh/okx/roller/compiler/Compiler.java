@@ -58,6 +58,13 @@ public class Compiler {
                 continue;
             }
 
+            // sort
+            if (c == '#') {
+                tokens.add(new Token(Type.SORT, "#"));
+                index++;
+                continue;
+            }
+
             if (c == '(') {
                 tokens.add(new Token(Type.LEFT_PARENTHESIS, "("));
                 index++;
