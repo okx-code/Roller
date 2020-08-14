@@ -38,7 +38,7 @@ public class RollCommand extends Command {
                     new CharacterContext(bot.getCharacterDao(), user.getIdLong()),
                     dice);
             result = compile.evaluate();
-        } catch (IllegalArgumentException ex){
+        } catch (RuntimeException ex){
             event.reply("Error: " + ex.getMessage());
             return;
         }

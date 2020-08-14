@@ -49,7 +49,7 @@ public class InitiativeCommand extends Command {
             ctx.setCharacter(character);
             AstNode compile = compiler.compile(ctx, initiative);
             result = compile.evaluate();
-        } catch (IllegalArgumentException ex){
+        } catch (RuntimeException ex){
             event.reply("Error: " + ex.getMessage());
             return;
         }

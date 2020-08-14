@@ -12,24 +12,33 @@ public class Shunter {
         List<Token> outputQueue = new ArrayList<>();
         Deque<Token> operatorStack = new ArrayDeque<>();
 
-        for (Token token : tokens) {
+        for (int i = 0; i < tokens.size(); i++) {
+            Token token = tokens.get(i);
             Type type = token.getType();
             if (type.arity() == 0) {
                 outputQueue.add(token);
             } else if (type == Type.RIGHT_PARENTHESIS) {
-                while (!operatorStack.isEmpty() && operatorStack.peek().getType() != Type.LEFT_PARENTHESIS) {
+                while (!operatorStack.isEmpty()
+                        && operatorStack.peek().getType() != Type.LEFT_PARENTHESIS) {
                     outputQueue.add(operatorStack.pop());
                 }
-                if (!operatorStack.isEmpty() && operatorStack.peek().getType() == Type.LEFT_PARENTHESIS) {
+                if (!operatorStack.isEmpty()
+                        && operatorStack.peek().getType() == Type.LEFT_PARENTHESIS) {
                     operatorStack.pop();
                 }
             } else if (type.notation() == Notation.PREFIX) {
                 operatorStack.push(token);
             } else {
                 if (!operatorStack.isEmpty()) {
-                    while (!operatorStack.isEmpty() && operatorStack.peek().getType().precedence() > type.precedence() && operatorStack.peek().getType() != Type.LEFT_PARENTHESIS) {
+                    while (!operatorStack.isEmpty()
+                            && operatorStack.peek().getType().precedence() > type.precedence()
+                            && operatorStack.peek().getType() != Type.LEFT_PARENTHESIS) {
                         outputQueue.add(operatorStack.pop());
                     }
+                }
+                if (type == Type.DICE && (i == 0 || tokens.get(i - 1).getType() != Type.LITERAL)) {
+                    // default dice count is 1
+                    outputQueue.add(new Token(Type.LITERAL, "1"));
                 }
                 operatorStack.push(token);
             }

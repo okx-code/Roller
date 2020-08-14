@@ -18,6 +18,12 @@ public class Compiler {
         return new Parser(context).parse(tokens);
     }
 
+    public static void main(String[] args) {
+        System.out.println(new Compiler().compile(null, "d20").evaluate().toHumanReadable());
+        System.out.println(new Compiler().compile(null, "2d20").evaluate().toHumanReadable());
+        System.out.println(new Compiler().compile(null, "5+d20").evaluate().toHumanReadable());
+    }
+
     public List<Token> tokenize(String input) {
         int index = 0;
         List<Token> tokens = new ArrayList<>();
