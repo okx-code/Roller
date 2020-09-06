@@ -121,6 +121,12 @@ public class Compiler {
             }
 
             if (c == '/') {
+                if (index + 1 < input.length() && input.charAt(index + 1) == '/') {
+                    // "//" operator (divide)
+                    tokens.add(new Token(Type.DIVIDE, "//"));
+                    index += 2;
+                    continue;
+                }
                 tokens.add(new Token(Type.TAKE, "/"));
                 index++;
                 continue;

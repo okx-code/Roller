@@ -39,7 +39,7 @@ public class SkillCommand extends Command {
       }
       String roll = "d20 + " + skill.getAbility().name().substring(0, 3) + " + " + args[1];
       dao.setSkill(character.getId(), skill, roll);
-      event.reply("Set skill roll for " + skill + " to `" + roll + "`");
+      event.reply("Set skill roll for " + skill.getName() + " to `" + roll + "`");
     });
     event.subCommand("roll", bonusEvent -> {
       String[] args = bonusEvent.requireArguments(2);
@@ -49,7 +49,7 @@ public class SkillCommand extends Command {
         return;
       }
       dao.setSkill(character.getId(), skill, args[1]);
-      event.reply("Set skill roll for " + skill + " to `" + args[1] + "`");
+      event.reply("Set skill roll for " + skill.getName() + " to `" + args[1] + "`");
     });
     event.subCommand("reset", bonusEvent -> {
       String[] args = bonusEvent.requireArguments(1);
@@ -60,7 +60,7 @@ public class SkillCommand extends Command {
       }
       String roll = "d20 + " + skill.getAbility().name().substring(0, 3);
       dao.setSkill(character.getId(), skill, null);
-      event.reply("Reset skill roll for " + skill + " to `" + roll + "`");
+      event.reply("Reset skill roll for " + skill.getName() + " to `" + roll + "`");
     });
 
     event.usage();

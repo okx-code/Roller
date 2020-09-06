@@ -12,6 +12,7 @@ import sh.okx.roller.compiler.ast.ArrayConcatNode;
 import sh.okx.roller.compiler.ast.AstNode;
 import sh.okx.roller.compiler.ast.DiceNode;
 import sh.okx.roller.compiler.ast.DisadvantageNode;
+import sh.okx.roller.compiler.ast.DivideNode;
 import sh.okx.roller.compiler.ast.MultiplyNode;
 import sh.okx.roller.compiler.ast.NumberLiteral;
 import sh.okx.roller.compiler.ast.ProficiencyNode;
@@ -99,6 +100,9 @@ public class Parser {
             } else if (type == Type.PROFICIENCY) {
                 index++;
                 nodes.push(new ProficiencyNode(context));
+            } else if (type == Type.DIVIDE) {
+                index++;
+                nodes.push(new DivideNode(nodes.pop(), nodes.pop()));
             }
         }
 

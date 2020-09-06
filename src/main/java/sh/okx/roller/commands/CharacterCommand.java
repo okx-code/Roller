@@ -102,7 +102,7 @@ public class CharacterCommand extends Command {
         for (Skill skill : Skill.values()) {
             String roll = skills.get(skill);
             if (roll != null) {
-                msg.append("\n*").append(skill.getName()).append("*: ").append(roll);
+                msg.append("\n*").append(skill.getName()).append(":* ").append(roll);
             }
         }
 
