@@ -21,9 +21,11 @@ public class Token {
         ABILITY(), // "dex" in d20 + dex
         DICE(Notation.INFIX, 2, 90), // "d" in 1d20
         LITERAL(), // "20" in d20
+        PROFICIENCY(),
+        SUB(),
         ADD(Notation.INFIX, 2, 10), // "+" in d20 + 5
-        ARRAY_CONCAT(Notation.INFIX, 2, 5), // "++" in 3/4d20 ++ 3/4d20
-        REPEAT(Notation.INFIX, 2, 20),
+        ARRAY_CONCAT(Notation.INFIX, 2, 5), // "++" in 3/4d20 ++ 3/4d20,
+        REPEAT(Notation.INFIX, 2, 1),
         TAKE(Notation.INFIX, 2, 80), // "/" in 3/4d20
         MODIFIER(Notation.PREFIX, 0, 95),
         MULTIPLY(Notation.INFIX, 2, 25),

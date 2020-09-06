@@ -113,17 +113,7 @@ public class Compiler {
                 String string = value.toString();
                 Token token = letterToken(string);
                 if (token == null) {
-                    if (string.startsWith("d") || string.startsWith("D")) {
-                        tokens.add(new Token(Type.DICE, string.substring(0, 1)));
-                        token = letterToken(string.substring(1));
-                    } else if (string.endsWith("d") || string.endsWith("D")) {
-                        int len = string.length();
-                        tokens.add(new Token(Type.DICE, string.substring(len - 1, len)));
-                        token = letterToken(string.substring(0, len - 1));
-                    }
-                    if (token == null) {
-                        throw new IllegalArgumentException("Invalid token: " + string);
-                    }
+                    throw new IllegalArgumentException("Invalid token: " + string);
                 }
 
                 tokens.add(token);
@@ -154,6 +144,10 @@ public class Compiler {
                 || string.equalsIgnoreCase("wis") || string.equalsIgnoreCase("wisdom")
                 || string.equalsIgnoreCase("cha") || string.equalsIgnoreCase("charisma")) {
             return new Token(Type.ABILITY, string);
+        } else if (string.equalsIgnoreCase("pro")
+            || string.equalsIgnoreCase("proficiency")
+            || string.equalsIgnoreCase("prof")) {
+            return new Token(Type.PROFICIENCY, string);
         }
         return null;
     }

@@ -4,4 +4,5 @@ import sh.okx.roller.character.Ability;
 
 public interface Context {
     int getScore(Ability ability);
+    int getLevel();
 }

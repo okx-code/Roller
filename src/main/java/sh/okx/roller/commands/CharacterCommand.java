@@ -105,7 +105,7 @@ public class CharacterCommand extends Command {
             }
 
 
-            msg.append("\n`").append(ability).append("`: ").append(score);
+            msg.append("\n**").append(ability).append("**: ").append(score);
         }
 
         event.reply(msg.toString());

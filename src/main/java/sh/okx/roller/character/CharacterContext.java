@@ -25,4 +25,10 @@ public class CharacterContext implements Context {
         }
         return Ability.getModifier(character.getScore(ability));
     }
+
+    @Override
+    public int getLevel() {
+        return character.getLevel();
+    }
+
 }

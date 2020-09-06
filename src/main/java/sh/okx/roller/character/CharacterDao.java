@@ -10,6 +10,7 @@ public interface CharacterDao {
     void setInitiative(long id, String initiative);
     void setScore(long id, Ability ability, int score);
     void setLevel(long id, int level);
+    void setSkill(long id, Skill skill, String roll);
 
     void createCharacter(long id, String name);
     void deleteCharacter(int id);

@@ -6,12 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import sh.okx.roller.character.Ability;
 import sh.okx.roller.character.Character;
 import sh.okx.roller.character.CharacterDao;
+import sh.okx.roller.character.Skill;
 
 public class SqlCharacterDao implements CharacterDao {
     private static final String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS users ("
@@ -31,9 +33,16 @@ public class SqlCharacterDao implements CharacterDao {
             + "ability VARCHAR(255), "
             + "score INT, "
             + "PRIMARY KEY (character_id, ability))";
+    private static final String CREATE_SKILLS_TABLE = "CREATE TABLE IF NOT EXISTS skills ("
+        + "character_id BIGINT, "
+        + "skill VARCHAR(255), "
+        + "roll VARCHAR(255), "
+        + "PRIMARY KEY (character_id, skill))";
 
     private static final String GET_CHARACTER = "SELECT * FROM characters WHERE character_id = (SELECT current_character_id FROM users WHERE user_id = ?)";
     private static final String GET_ABILITIES = "SELECT * FROM abilities WHERE character_id = ?";
+    private static final String GET_SKILLS = "SELECT * FROM skills WHERE character_id = ?";
+    private static final String SET_SKILL = "REPLACE INTO skills (character_id, skill, roll) VALUES (?, ?, ?)";
     private static final String SET_SCORE = "REPLACE INTO abilities (character_id, ability, score) VALUES (?, ?, ?)";
     private static final String SET_INITIATIVE = "UPDATE characters SET initiative = ? WHERE character_id = ?";
     private static final String SET_LEVEL = "UPDATE characters SET level = ? WHERE character_id = ?";
@@ -41,6 +50,7 @@ public class SqlCharacterDao implements CharacterDao {
     private static final String CREATE_CHARACTER = "INSERT INTO characters (name, user_id) VALUES (?, ?)";
     private static final String DELETE_ABILITIES = "DELETE FROM abilities WHERE character_id = ?";
     private static final String DELETE_CHARACTER = "DELETE FROM characters WHERE character_id = ?";
+    private static final String DELETE_SKILLS = "DELETE FROM skills WHERE character_id = ?";
     private static final String SELECT_CHARACTER = "REPLACE INTO users (user_id, current_character_id) VALUES (?, ?)";
 
     private final DataSource source;
@@ -56,6 +66,7 @@ public class SqlCharacterDao implements CharacterDao {
             connection.createStatement().executeUpdate(CREATE_CHARACTER_TABLE);
             connection.createStatement().executeUpdate(CREATE_ABILITY_TABLE);
             connection.createStatement().executeUpdate(CREATE_USER_TABLE);
+            connection.createStatement().executeUpdate(CREATE_SKILLS_TABLE);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -72,7 +83,7 @@ public class SqlCharacterDao implements CharacterDao {
             while (characterResult.next()) {
                 String initiative = characterResult.getString("initiative");
                 String name = characterResult.getString("name");
-                characters.add(new Character(characterResult.getInt("character_id"), characterResult.getInt("level"), name, initiative, null));
+                characters.add(new Character(characterResult.getInt("character_id"), characterResult.getInt("level"), name, initiative, null, null));
             }
 
             return characters;
@@ -96,7 +107,7 @@ public class SqlCharacterDao implements CharacterDao {
                     characterResult.getInt("level"),
                     characterResult.getString("name"),
                     characterResult.getString("initiative"),
-                    null);
+                    null, null);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -123,7 +134,19 @@ public class SqlCharacterDao implements CharacterDao {
                 scores.put(ability, score);
             }
 
-            return new Character(character.getId(), character.getLevel(), character.getName(), character.getInitiative(), scores);
+            PreparedStatement skillStatement = connection.prepareStatement(GET_SKILLS);
+            skillStatement.setLong(1, character.getId());
+
+            Map<Skill, String> skills = new HashMap<>();
+
+            ResultSet skillResult = skillStatement.executeQuery();
+            while (skillResult.next()) {
+                String skill = skillResult.getString("skill");
+                String roll = skillResult.getString("roll");
+                skills.put(Skill.valueOf(skill), roll);
+            }
+
+            return new Character(character.getId(), character.getLevel(), character.getName(), character.getInitiative(), scores, skills);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -148,6 +171,20 @@ public class SqlCharacterDao implements CharacterDao {
             PreparedStatement statement = connection.prepareStatement(SET_LEVEL);
             statement.setInt(1, level);
             statement.setLong(2, id);
+
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void setSkill(long id, Skill skill, String roll) {
+        try(Connection connection = source.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(SET_SKILL);
+            statement.setLong(1, id);
+            statement.setString(2, skill.name());
+            statement.setString(3, roll);
 
             statement.executeUpdate();
         } catch (SQLException ex) {
@@ -192,6 +229,10 @@ public class SqlCharacterDao implements CharacterDao {
             PreparedStatement deleteCharacter = connection.prepareStatement(DELETE_CHARACTER);
             deleteCharacter.setInt(1, id);
             deleteCharacter.executeUpdate();
+
+            PreparedStatement deleteSkills = connection.prepareStatement(DELETE_SKILLS);
+            deleteSkills.setInt(1, id);
+            deleteSkills.executeUpdate();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
