@@ -1,9 +1,11 @@
 package sh.okx.roller.commands;
 
 import java.util.List;
+import java.util.Map;
 import sh.okx.roller.Roller;
 import sh.okx.roller.character.Ability;
 import sh.okx.roller.character.Character;
+import sh.okx.roller.character.Skill;
 import sh.okx.roller.command.Command;
 import sh.okx.roller.command.CommandEvent;
 
@@ -95,6 +97,14 @@ public class CharacterCommand extends Command {
 
         msg.append("\nLevel: **").append(character.getLevel()).append("**")
                 .append("\nInitiative roll: " + "`").append(character.getInitiative()).append("`");
+
+        Map<Skill, String> skills = character.getSkills();
+        for (Skill skill : Skill.values()) {
+            String roll = skills.get(skill);
+            if (roll != null) {
+                msg.append("\n*").append(skill.getName()).append("*: ").append(roll);
+            }
+        }
 
         for (Ability ability : Ability.values()) {
             String score;

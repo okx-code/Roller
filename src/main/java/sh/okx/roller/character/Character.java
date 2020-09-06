@@ -48,6 +48,10 @@ public class Character {
         return skills.get(skill);
     }
 
+    public Map<Skill, String> getSkills() {
+        return skills;
+    }
+
     public static int getProficiencyBonus(int level) {
         return (int) Math.ceil(level / 4F) + 1;
     }

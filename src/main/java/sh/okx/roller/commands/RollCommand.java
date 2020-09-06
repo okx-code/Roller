@@ -18,15 +18,6 @@ public class RollCommand extends Command {
         this.description = "Roll D&D dice";
     }
 
-    /*
-     * Roll command usage in Backus-Naur grammar
-     * <param> ::= <dice> | <dice> <addendum>
-     * <dice> ::= <number> "d" <number> | "d" <number>
-     * <addendum> ::= <opt-whitespace> "+" <opt-whitespace> <number>
-     * <opt-whitespace> ::= " " <opt-whitespace> | ""
-     * <number> ::= <digit> | <digit> <number>
-     * <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-     */
     @Override
     public void onSend(CommandEvent event) {
         String dice = event.getArguments();

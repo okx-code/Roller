@@ -58,9 +58,9 @@ public class SkillCommand extends Command {
         event.reply("Unknown skill: " + args[0]);
         return;
       }
-      String roll = skill.getAbility().name().substring(0, 3);
+      String roll = "d20 + " + skill.getAbility().name().substring(0, 3);
       dao.setSkill(character.getId(), skill, null);
-      event.reply("Set skill roll for " + skill + " to `" + roll + "`");
+      event.reply("Reset skill roll for " + skill + " to `" + roll + "`");
     });
 
     event.usage();
