@@ -19,8 +19,8 @@ public class DivideNode extends AstNode {
     NodeResult leftEval = this.left.evaluate();
     int left = leftEval.number();
 
-    int result = left / right;
+    int result = right / left;
 
-    return new IntResult(rightEval.toHumanReadable() + " / " + leftEval.toHumanReadable(), result);
+    return new IntResult(rightEval.toHumanReadable() + " // " + leftEval.toHumanReadable(), result);
   }
 }
