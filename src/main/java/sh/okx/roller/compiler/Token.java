@@ -30,6 +30,7 @@ public class Token {
         DIVIDE(Notation.INFIX, 2, 9),
         MODIFIER(Notation.PREFIX, 0, 95),
         MULTIPLY(Notation.INFIX, 2, 25),
+        SUBTRACT(Notation.INFIX, 2, 10),
         SORT(Notation.PREFIX, 1, 70),
         LEFT_PARENTHESIS(Notation.PREFIX, 1, 100),
         RIGHT_PARENTHESIS(Notation.PREFIX, 1, 100);

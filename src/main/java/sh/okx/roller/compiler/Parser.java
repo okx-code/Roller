@@ -18,6 +18,7 @@ import sh.okx.roller.compiler.ast.NumberLiteral;
 import sh.okx.roller.compiler.ast.ProficiencyNode;
 import sh.okx.roller.compiler.ast.RepeatNode;
 import sh.okx.roller.compiler.ast.SortNode;
+import sh.okx.roller.compiler.ast.SubtractNode;
 import sh.okx.roller.compiler.ast.TakeNode;
 import sh.okx.roller.compiler.context.Context;
 
@@ -103,6 +104,9 @@ public class Parser {
             } else if (type == Type.DIVIDE) {
                 index++;
                 nodes.push(new DivideNode(nodes.pop(), nodes.pop()));
+            } else if (type == Type.SUBTRACT) {
+                index++;
+                nodes.push(new SubtractNode(nodes.pop(), nodes.pop()));
             }
         }
 

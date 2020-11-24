@@ -43,6 +43,11 @@ public class Compiler {
                 index++;
                 continue;
             }
+            if (c == '-') {
+                tokens.add(new Token(Type.SUBTRACT, "-"));
+                index++;
+                continue;
+            }
 
             // repeat
             if (c == '^') {
