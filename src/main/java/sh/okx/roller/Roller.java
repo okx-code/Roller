@@ -39,6 +39,8 @@ public class Roller {
     @Getter
     private final CharacterDao characterDao;
 
+    private RollCommand rollCommand;
+
     public Roller(Properties config) throws LoginException {
         this.config = config;
 
@@ -51,7 +53,7 @@ public class Roller {
         registerCommands();
 
         this.jda = JDABuilder.createDefault(config.getProperty("token"))
-            .addEventListeners(commands)
+            .addEventListeners(commands, new RollShortcutCommand(rollCommand))
             .setActivity(Activity.playing("D&D 5e: " + commands.getPrefix() + "help"))
             .build();
     }
@@ -59,7 +61,7 @@ public class Roller {
     private void registerCommands() {
         commands = new CommandListener(this, config.getProperty("prefix"));
         commands.addCommand(new HelpCommand(this));
-        commands.addCommand(new RollCommand(this));
+        commands.addCommand(rollCommand = new RollCommand(this));
         commands.addCommand(new EvalCommand(this));
         commands.addCommand(new SourceCommand(this));
         commands.addCommand(new StopCommand(this));
