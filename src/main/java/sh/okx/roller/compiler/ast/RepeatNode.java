@@ -16,15 +16,16 @@ public class RepeatNode extends AstNode {
     public NodeResult evaluate() {
         int times = right.evaluate().number();
 
-        StringBuilder human = new StringBuilder();
+        StringBuilder human = new StringBuilder("{");
         NodeResult[] results = new NodeResult[times];
         for (int i = 0; i < times; i++) {
             results[i] = left.evaluate();
             if (i > 0) {
-                human.append(" ");
+                human.append(", ");
             }
             human.append(results[i].toHumanReadable());
         }
+        human.append("}");
 
         int[][] array = new int[times][];
         int index = 0;
