@@ -22,11 +22,12 @@ public class RollShortcutCommand extends ListenerAdapter {
     }
 
     String contents = event.getMessage().getContentDisplay();
-    if (contents.length() < 4) {
+    if (contents.length() < 3) {
       return;
     }
 
-    if (!contents.substring(0, 4).equalsIgnoreCase(",d20")) {
+    char digit = contents.charAt(2);
+    if (!contents.substring(0, 2).equalsIgnoreCase(",d") || digit < '0' || digit > '9') {
       return;
     }
 
