@@ -20,7 +20,7 @@ public class SlashCommandHandler extends ListenerAdapter {
 
   @Override
   public void onReady(@NotNull ReadyEvent event) {
-    CommandUpdateAction commands = event.getJDA().getGuildById(480324285798547457L).updateCommands();
+    CommandUpdateAction commands = event.getJDA().updateCommands();
 
     OptionData data = new OptionData(OptionType.STRING, "skill", "The skill to check")
         .setRequired(true);
