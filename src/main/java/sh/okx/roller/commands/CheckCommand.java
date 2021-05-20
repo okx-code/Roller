@@ -1,5 +1,7 @@
 package sh.okx.roller.commands;
 
+import java.util.function.Consumer;
+import net.dv8tion.jda.api.entities.User;
 import sh.okx.roller.Roller;
 import sh.okx.roller.character.Character;
 import sh.okx.roller.character.CharacterContext;
@@ -21,19 +23,24 @@ public class CheckCommand extends Command {
 
   @Override
   public void onSend(CommandEvent event) {
-    Character character = bot.getCharacterDao().getCharacter(event.getUserId());
-    if (character == null) {
-      event.reply("You must create and select a character to use this command.\n"
-          + "See `,help character` for usage.");
-      return;
-    }
-
     String skillName = event.requireArguments(1)[0];
     Skill skill = Skill.matchSkill(skillName);
     if (skill == null) {
       event.reply("Invalid skill: " + skillName);
       return;
     }
+
+    checkCommand(event::reply, event.getUser(), skill);
+  }
+
+  public void checkCommand(Consumer<String> reply, User user, Skill skill) {
+    Character character = bot.getCharacterDao().getCharacter(user.getIdLong());
+    if (character == null) {
+      reply.accept("You must create and select a character to use this command.\n"
+          + "See `,help character` for usage.");
+      return;
+    }
+
     boolean changed = false;
     String roll = character.getSkill(skill);
     if (roll == null) {
@@ -43,17 +50,17 @@ public class CheckCommand extends Command {
 
     NodeResult result;
     try {
-      CharacterContext ctx = new CharacterContext(bot.getCharacterDao(), event.getUserId());
+      CharacterContext ctx = new CharacterContext(bot.getCharacterDao(), user.getIdLong());
       ctx.setCharacter(character);
       AstNode compile = compiler.compile(ctx, roll);
       result = compile.evaluate();
     } catch (RuntimeException ex){
-      event.reply("Error: " + ex.getMessage());
+      reply.accept("Error: " + ex.getMessage());
       return;
     }
 
-    String name = event.getUser().getName();
-    event.reply(name + ", " + skill.getName() + " "
+    String name = user.getName();
+    reply.accept(name + ", " + skill.getName() + " "
         + (changed ? "(using default roll of " + roll + ")" : "(" + roll + ")")
         + ", Roll: `" + result.toHumanReadable() + "`, "
         + "Result: `" + Util.sum(result.array()) + "`");

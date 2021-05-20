@@ -31,86 +31,88 @@ import sh.okx.roller.database.SqlCharacterDao;
 
 @Log
 public class Roller {
-    @Getter
-    private final JDA jda;
-    private final Properties config;
-    @Getter
-    private CommandListener commands;
-    @Getter
-    private final CharacterDao characterDao;
 
-    private RollCommand rollCommand;
+  @Getter
+  private final JDA jda;
+  private final Properties config;
+  @Getter
+  private CommandListener commands;
+  @Getter
+  private final CharacterDao characterDao;
 
-    public Roller(Properties config) throws LoginException {
-        this.config = config;
+  private RollCommand rollCommand;
+  private CheckCommand checkCommand;
 
-        HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl("jdbc:mysql://localhost:3306/" + config.getProperty("sql.database"));
-        ds.setUsername(config.getProperty("sql.username"));
-        ds.setPassword(config.getProperty("sql.password"));
-        this.characterDao = new SqlCharacterDao(ds);
+  public Roller(Properties config) throws LoginException {
+    this.config = config;
 
-        registerCommands();
+    HikariDataSource ds = new HikariDataSource();
+    ds.setJdbcUrl("jdbc:mysql://localhost:3306/" + config.getProperty("sql.database"));
+    ds.setUsername(config.getProperty("sql.username"));
+    ds.setPassword(config.getProperty("sql.password"));
+    this.characterDao = new SqlCharacterDao(ds);
 
-        this.jda = JDABuilder.createDefault(config.getProperty("token"))
-            .addEventListeners(commands, new RollShortcutCommand(rollCommand))
-            .setActivity(Activity.playing("D&D 5e: " + commands.getPrefix() + "help"))
-            .build();
+    registerCommands();
+
+    this.jda = JDABuilder.createDefault(config.getProperty("token"))
+        .addEventListeners(commands, new RollShortcutCommand(rollCommand), new SlashCommandHandler(checkCommand))
+        .setActivity(Activity.playing("D&D 5e: " + commands.getPrefix() + "help"))
+        .build();
+  }
+
+  private void registerCommands() {
+    commands = new CommandListener(this, config.getProperty("prefix"));
+    commands.addCommand(new HelpCommand(this));
+    commands.addCommand(rollCommand = new RollCommand(this));
+    commands.addCommand(new EvalCommand(this));
+    commands.addCommand(new SourceCommand(this));
+    commands.addCommand(new StopCommand(this));
+
+    commands.addCommand(new CharacterCommand(this));
+
+    commands.addCommand(new InitiativeCommand(this));
+    commands.addCommand(new LevelCommand(this));
+
+    commands.addCommand(new SkillCommand(this));
+    commands.addCommand(checkCommand = new CheckCommand(this));
+
+    commands.addCommand(new ScoreCommand(this, Ability.DEXTERITY, "dex"));
+    commands.addCommand(new ScoreCommand(this, Ability.STRENGTH, "str"));
+    commands.addCommand(new ScoreCommand(this, Ability.CHARISMA, "cha"));
+    commands.addCommand(new ScoreCommand(this, Ability.CONSTITUTION, "con"));
+    commands.addCommand(new ScoreCommand(this, Ability.INTELLIGENCE, "int"));
+    commands.addCommand(new ScoreCommand(this, Ability.WISDOM, "wis"));
+
+
+  }
+
+  public static void main(String[] args) throws Exception {
+    File config = new File("config.properties");
+    if (config.exists()) {
+      Properties properties = new Properties();
+      properties.load(new FileInputStream(config));
+      new Roller(properties);
+    } else {
+      if (copyResource(config.getName())) {
+        log.info("Copied default configuration");
+      }
+    }
+  }
+
+  private static boolean copyResource(String resource) throws IOException {
+    File file = new File(resource);
+    if (file.exists()) {
+      return false;
     }
 
-    private void registerCommands() {
-        commands = new CommandListener(this, config.getProperty("prefix"));
-        commands.addCommand(new HelpCommand(this));
-        commands.addCommand(rollCommand = new RollCommand(this));
-        commands.addCommand(new EvalCommand(this));
-        commands.addCommand(new SourceCommand(this));
-        commands.addCommand(new StopCommand(this));
+    InputStream configResource = Roller.class.getResourceAsStream("/" + resource);
+    FileOutputStream stream = new FileOutputStream(file);
 
-        commands.addCommand(new CharacterCommand(this));
-
-        commands.addCommand(new InitiativeCommand(this));
-        commands.addCommand(new LevelCommand(this));
-
-        commands.addCommand(new SkillCommand(this));
-        commands.addCommand(new CheckCommand(this));
-
-        commands.addCommand(new ScoreCommand(this, Ability.DEXTERITY, "dex"));
-        commands.addCommand(new ScoreCommand(this, Ability.STRENGTH, "str"));
-        commands.addCommand(new ScoreCommand(this, Ability.CHARISMA, "cha"));
-        commands.addCommand(new ScoreCommand(this, Ability.CONSTITUTION, "con"));
-        commands.addCommand(new ScoreCommand(this, Ability.INTELLIGENCE, "int"));
-        commands.addCommand(new ScoreCommand(this, Ability.WISDOM, "wis"));
-
-
+    byte[] buf = new byte[1024];
+    int read;
+    while ((read = configResource.read(buf)) != -1) {
+      stream.write(buf, 0, read);
     }
-
-    public static void main(String[] args) throws Exception {
-        File config = new File("config.properties");
-        if (config.exists()) {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(config));
-            new Roller(properties);
-        } else {
-            if (copyResource(config.getName())) {
-                log.info("Copied default configuration");
-            }
-        }
-    }
-
-    private static boolean copyResource(String resource) throws IOException {
-        File file = new File(resource);
-        if (file.exists()) {
-            return false;
-        }
-
-        InputStream configResource = Roller.class.getResourceAsStream("/" + resource);
-        FileOutputStream stream = new FileOutputStream(file);
-
-        byte[] buf = new byte[1024];
-        int read;
-        while ((read = configResource.read(buf)) != -1) {
-            stream.write(buf, 0, read);
-        }
-        return true;
-    }
+    return true;
+  }
 }

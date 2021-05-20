@@ -14,6 +14,7 @@ public class RollCommand extends Command {
 
     public RollCommand(Roller bot) {
         super(bot, "roll");
+        this.aliases = new String[] {"r"};
         this.usage = "<dice = 1d20 + x>";
         this.description = "Roll D&D dice";
     }

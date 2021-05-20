@@ -33,7 +33,7 @@ public enum Skill {
 
   public static Skill matchSkill(String string) {
     Skill closestSkill = null;
-    double closestMatch = 0.75;
+    double closestMatch = 0.7;
 
     for (Skill skill : values()) {
       double match = jwd.apply(skill.getName(), string);
